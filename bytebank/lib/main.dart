@@ -39,18 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.colorScheme.primary,
-        title: const Text('Transferencias'),
-      ),
-      body: const TransferList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      body: TransferForm(),
     );
   }
 }
@@ -65,6 +55,76 @@ class TransferList extends StatelessWidget {
         TransferItem(transferModel: TransferModel('100.0', '1000')),
         TransferItem(transferModel: TransferModel('100.0', '1000')),
       ],
+    );
+  }
+}
+
+class TransferForm extends StatelessWidget {
+  TransferForm({super.key});
+
+  final TextEditingController _accountNumberController =
+      TextEditingController();
+  final TextEditingController _valueController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: theme.colorScheme.primary,
+        title: const Text('Transfers'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: TextField(
+              style: TextStyle(fontSize: 24.0),
+              decoration: InputDecoration(
+                labelText: 'Account number',
+                hintText: '0000',
+              ),
+              keyboardType: TextInputType.number,
+              controller: _accountNumberController,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _valueController,
+              style: TextStyle(fontSize: 24.0),
+              decoration: InputDecoration(
+                icon: Icon(Icons.monetization_on),
+                labelText: 'Value',
+                hintText: '0.00',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              debugPrint(_valueController.text);
+              debugPrint(_accountNumberController.text);
+              final int? accountNumber =
+                  int.tryParse(_accountNumberController.text);
+              final double? value = double.tryParse(_valueController.text);
+              final transfer =
+                  TransferModel(accountNumber.toString(), value.toString());
+              debugPrint('$transfer');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      '$transfer.value transferred to account $transfer.accountNumber'),
+                ),
+              );
+            },
+            child: const Text(
+              'Confirm',
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
