@@ -76,47 +76,21 @@ class TransferForm extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              style: TextStyle(fontSize: 24.0),
-              decoration: InputDecoration(
-                labelText: 'Account number',
-                hintText: '0000',
-              ),
-              keyboardType: TextInputType.number,
-              controller: _accountNumberController,
-            ),
+          Editor(
+            controller: _accountNumberController,
+            label: 'Account Number',
+            hint: '0000',
+            icon: Icons.account_balance,
           ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _valueController,
-              style: TextStyle(fontSize: 24.0),
-              decoration: InputDecoration(
-                icon: Icon(Icons.monetization_on),
-                labelText: 'Value',
-                hintText: '0.00',
-              ),
-              keyboardType: TextInputType.number,
-            ),
+          Editor(
+            controller: _valueController,
+            label: 'Value',
+            hint: '0,00',
+            icon: Icons.monetization_on,
           ),
           ElevatedButton(
             onPressed: () {
-              debugPrint(_valueController.text);
-              debugPrint(_accountNumberController.text);
-              final int? accountNumber =
-                  int.tryParse(_accountNumberController.text);
-              final double? value = double.tryParse(_valueController.text);
-              final transfer =
-                  TransferModel(accountNumber.toString(), value.toString());
-              debugPrint('$transfer');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                      '$transfer.value transferred to account $transfer.accountNumber'),
-                ),
-              );
+              _createTransfer(context);
             },
             child: const Text(
               'Confirm',
@@ -124,6 +98,49 @@ class TransferForm extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _createTransfer(BuildContext context) {
+    final int? accountNumber = int.tryParse(_accountNumberController.text);
+    final double? value = double.tryParse(_valueController.text);
+    final transfer = TransferModel(accountNumber.toString(), value.toString());
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(transfer.toString()),
+      ),
+    );
+  }
+}
+
+class Editor extends StatelessWidget {
+  const Editor({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.hint,
+    this.icon,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(fontSize: 24.0),
+        decoration: InputDecoration(
+          icon: icon != null ? Icon(icon) : null,
+          labelText: label,
+          hintText: hint,
+        ),
+        keyboardType: TextInputType.number,
       ),
     );
   }
@@ -154,4 +171,9 @@ class TransferModel {
   final String accountNumber;
 
   TransferModel(this.value, this.accountNumber);
+
+  @override
+  toString() {
+    return 'TransferModel{value: $value, accountNumber: $accountNumber}';
+  }
 }
