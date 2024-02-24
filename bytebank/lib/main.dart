@@ -83,30 +83,32 @@ class TransferForm extends StatelessWidget {
         backgroundColor: theme.colorScheme.primary,
         title: const Text('Transfers'),
       ),
-      body: Column(
-        children: [
-          Editor(
-            controller: _accountNumberController,
-            label: 'Account Number',
-            hint: '0000',
-            icon: Icons.account_balance,
-          ),
-          Editor(
-            controller: _valueController,
-            label: 'Value',
-            hint: '0,00',
-            icon: Icons.monetization_on,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              _createTransfer(context);
-            },
-            child: const Text(
-              'Confirm',
-              textDirection: TextDirection.ltr,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Editor(
+              controller: _accountNumberController,
+              label: 'Account Number',
+              hint: '0000',
+              icon: Icons.account_balance,
             ),
-          ),
-        ],
+            Editor(
+              controller: _valueController,
+              label: 'Value',
+              hint: '0,00',
+              icon: Icons.monetization_on,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _createTransfer(context);
+              },
+              child: const Text(
+                'Confirm',
+                textDirection: TextDirection.ltr,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -114,6 +116,15 @@ class TransferForm extends StatelessWidget {
   void _createTransfer(BuildContext context) {
     final int? accountNumber = int.tryParse(_accountNumberController.text);
     final double? value = double.tryParse(_valueController.text);
+    if (accountNumber == null || value == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid values'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
     final transfer = TransferModel(accountNumber.toString(), value.toString());
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
