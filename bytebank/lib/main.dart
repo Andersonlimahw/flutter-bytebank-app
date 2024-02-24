@@ -16,45 +16,54 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Bytebank'),
+      home: TransferList(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class TransferList extends StatefulWidget {
+  TransferList({super.key});
+
+  final List<TransferModel> transfers = [];
+
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StatefulWidget> createState() => _TransferListState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+class _TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TransferForm(),
-    );
-  }
-}
-
-class TransferList extends StatelessWidget {
-  const TransferList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TransferItem(transferModel: TransferModel('100.0', '1000')),
-        TransferItem(transferModel: TransferModel('100.0', '1000')),
-      ],
+      appBar: AppBar(
+        title: const Text('Transfers List'),
+      ),
+      body: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: widget.transfers.length,
+          itemBuilder: (BuildContext context, int index) {
+            return TransferItem(transferModel: widget.transfers[index]);
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final Future routeFuture = Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return TransferForm();
+            }),
+          );
+          routeFuture.then((value) => {
+                debugPrint('value: $value'),
+                if (value != null)
+                  {
+                    setState(() {
+                      widget.transfers.add(value);
+                    })
+                  }
+              });
+        },
+        tooltip: 'New transfer',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
@@ -111,6 +120,7 @@ class TransferForm extends StatelessWidget {
         content: Text(transfer.toString()),
       ),
     );
+    Navigator.pop(context, transfer);
   }
 }
 
@@ -159,7 +169,7 @@ class TransferItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: const Icon(Icons.monetization_on),
-        title: Text(transferModel.value.toString()),
+        title: Text(transferModel.accountNumber.toString()),
         subtitle: Text(transferModel.value.toString()),
       ),
     );
