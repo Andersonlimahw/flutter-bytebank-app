@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BybankApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BybankApp extends StatelessWidget {
+  const BybankApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -68,9 +68,13 @@ class _TransferListState extends State<TransferList> {
   }
 }
 
-class TransferForm extends StatelessWidget {
-  TransferForm({super.key});
+class TransferForm extends StatefulWidget {
+  const TransferForm({super.key});
+  @override
+  State<StatefulWidget> createState() => _TransferFormState();
+}
 
+class _TransferFormState extends State<StatefulWidget> {
   final TextEditingController _accountNumberController =
       TextEditingController();
   final TextEditingController _valueController = TextEditingController();
@@ -129,6 +133,7 @@ class TransferForm extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(transfer.toString()),
+        backgroundColor: Colors.greenAccent,
       ),
     );
     Navigator.pop(context, transfer);
