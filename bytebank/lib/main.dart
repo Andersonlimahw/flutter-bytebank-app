@@ -13,8 +13,18 @@ class BybankApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bytebank',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blueAccent,
+          brightness: Brightness.light,
+        )
+            .copyWith(
+              background: Colors.white54,
+            )
+            .copyWith(
+              primary: Colors.blueAccent,
+              secondary: Colors.white,
+            ),
       ),
       home: TransferList(),
     );
@@ -48,7 +58,7 @@ class _TransferListState extends State<TransferList> {
           final Future routeFuture = Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              return TransferForm();
+              return const TransferForm();
             }),
           );
           routeFuture.then((value) => {
