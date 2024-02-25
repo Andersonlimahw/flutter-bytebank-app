@@ -18,6 +18,7 @@ class _TransferListState extends State<TransferList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(TransferStrings.transfersList),
+        backgroundColor: Colors.black,
       ),
       body: ListView.builder(
           padding: const EdgeInsets.all(8),

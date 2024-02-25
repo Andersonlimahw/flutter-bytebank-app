@@ -16,10 +16,9 @@ class _TransferFormState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: Colors.black87,
         title: const Text(TransferStrings.appBar),
       ),
       body: SingleChildScrollView(
